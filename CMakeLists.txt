@@ -1,0 +1,28 @@
+cmake_minimum_required(VERSION 3.16)
+project(Project2CTDL LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_library(hr_core src/Personnel.cpp src/FileManager.cpp src/Services.cpp)
+target_include_directories(hr_core PUBLIC include)
+add_executable(personnel src/main.cpp src/ConsoleUI.cpp src/Application.cpp)
+target_link_libraries(personnel PRIVATE hr_core)
+enable_testing()
+add_executable(personnel_tests tests/tests.cpp)
+target_link_libraries(personnel_tests PRIVATE hr_core)
+add_test(NAME core COMMAND personnel_tests)
+find_package(Python3 COMPONENTS Interpreter QUIET)
+if(Python3_Interpreter_FOUND)
+    add_test(NAME console
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/console_test.py"
+                $<TARGET_FILE:personnel>)
+endif()
+
+foreach(target hr_core personnel personnel_tests)
+    if(MSVC)
+        target_compile_options(${target} PRIVATE /W4 /utf-8)
+    else()
+        target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
+endforeach()

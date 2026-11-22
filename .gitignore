@@ -1,0 +1,7 @@
+/build*/
+/personnel.exe
+/data/.lock
+/data/.transaction/
+/data/*.txt.tmp
+/data/*.txt.bak
+/tests/__pycache__/
