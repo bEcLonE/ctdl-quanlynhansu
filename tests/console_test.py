@@ -55,11 +55,15 @@ def main():
 
         output = run(executable, data, [
             "x", "9", "2", "demo", "bad", "demo", "bad", "demo", "bad",
-            "2", "demo", "111111", "111111", "First!9", "DoNotMatch", "k", "0",
+            "1", "admin1", "DemoAdmin1",
         ])
         assert output.count("Lựa chọn không hợp lệ") == 2
         assert output.count("Sai username hoặc mật khẩu.") == 3
-        assert "Đã sai 3 lần." in output
+        assert "Đã sai 3 lần. Thoát chương trình." in output
+        assert "ĐĂNG NHẬP QUẢN TRỊ VIÊN" not in output
+        output = run(executable, data, [
+            "2", "demo", "111111", "111111", "First!9", "DoNotMatch", "k", "0",
+        ])
         assert "Mật khẩu xác nhận không khớp." in output
         assert all(row.strip(" ║") != "NHÂN VIÊN" for row in output.splitlines())
         assert "HỆ THỐNG QUẢN LÝ NHÂN SỰ" in output and "██" in output
@@ -85,19 +89,16 @@ def main():
         long_name = "A\u0301nh " + "界" * 40
         output = run(executable, data, [
             "1", "admin3", "DemoAdmin3",
+            "7",
             "1", "CON",
             "1", "test_user", long_name, "Đà Nẵng", "0901234567", "initial@example.com",
             "1", "TEST_USER",
             "3", "test_user",
             "4", "test_user", "0",
             "4", "test_user", "2", "Hà Nội",
+            "4", "test_user", "3", "0912345678",
+            "4", "test_user", "4", "second@example.com",
             "5",
-            "7", "1", "2", "test_user", "3",
-            "5", "test_user", "0",
-            "5", "test_user", "4", "first@example.com",
-            "5", "test_user", "4", "second@example.com",
-            "6", "6", "6", "3", "4", "3",
-            "8", "1", "8", "2", "8", "3", "0",
             "3", "test_user",
             "2", "test_user", "n",
             "6", "0",
@@ -116,15 +117,14 @@ def main():
             actual = [width(row[:i]) for i, char in enumerate(row) if char == "║"]
             assert actual == boundaries, repr(row)
         assert "Đã cập nhật hồ sơ." in output and "Hà Nội" in output
-        assert output.count("Đã lưu cập nhật đầu hàng.") == 2 and "Hàng đợi đang rỗng." in output
-        assert output.count("Cập nhật từ hàng đợi test_user") == 2
-        assert output.count("DUYỆT CHỈ MỤC AVL") == 3
+        assert "Lựa chọn không hợp lệ" in output and "Công cụ quản trị" not in output
+        assert output.count("Đã cập nhật hồ sơ.") == 3
         assert "Đã hủy xóa." in output and "second@example.com" in output
         profile = [row for row in output.splitlines() if row.startswith("║") and row.count("║") == 2]
         assert any("THÔNG TIN NHÂN VIÊN" in row for row in profile)
         assert any("界界界" in row and "..." not in row for row in profile)
         assert (data / "test_user.txt").read_text(encoding="utf-8").splitlines() == [
-            long_name, "Hà Nội", "0901234567", "second@example.com"
+            long_name, "Hà Nội", "0912345678", "second@example.com"
         ]
         output = run(executable, data, [
             "1", "admin1", "DemoAdmin1", "2", "test_user", "y", "3", "test_user", "6", "0",
@@ -132,7 +132,7 @@ def main():
         assert "Đã xóa nhân viên." in output and "Không tìm thấy nhân viên." in output
         assert not (data / "test_user.txt").exists()
         assert (data / "Employees.txt").read_text() == "demo Second!9\n"
-    print("Console workflows, password prompts, restart, admin tools, and Unicode frame widths passed.")
+    print("Admin and employee menus, password prompts, restart, and Unicode frame widths passed.")
 
 
 if __name__ == "__main__":

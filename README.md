@@ -29,9 +29,9 @@ Mật khẩu của `demo` thay đổi sau lần đăng nhập đầu tiên thàn
 ## Chức năng và cấu trúc dữ liệu
 
 - Quản trị viên thêm, tìm, sửa từng trường, xem danh sách và xác nhận xóa nhân viên.
-- Nhân viên xem hồ sơ của mình và đổi mật khẩu. Mật khẩu được che khi nhập. Sau ba lần sai, chương trình kết thúc lượt đăng nhập.
+- Nhân viên xem hồ sơ của mình và đổi mật khẩu. Mật khẩu được che khi nhập. Sau ba lần sai, chương trình thoát chương trình khi đăng nhập nhân viên.
 - `LinkedList<Employee>` lưu danh sách nhân viên. Linear Search duyệt danh sách, Merge Sort nối lại các node để sắp xếp theo họ tên.
-- `Stack` lưu lịch sử, `Queue` xử lý cập nhật theo thứ tự tiếp nhận, `AvlTree` lập chỉ mục username. Có thể demo trong mục 7 của menu quản trị.
+- AVL lập chỉ mục username. Linear Search, Merge Sort, Stack và Queue được kiểm thử trong bộ test C++.
 
 ## Mã nguồn
 
